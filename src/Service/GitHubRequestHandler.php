@@ -25,7 +25,7 @@ class GitHubRequestHandler
     }
 
     /**
-     * @return array The response data
+     * @return array<string, mixed> The response data
      */
     public function handle(Request $request): array
     {

@@ -18,7 +18,7 @@ class GithubLabelApi implements LabelApi
     /**
      * In memory cache for specific issues.
      *
-     * @var array<array-key, array<array-key, bool>>
+     * @var array<string, array<string, bool>>
      */
     private array $labelCache = [];
 
@@ -30,7 +30,10 @@ class GithubLabelApi implements LabelApi
     ) {
     }
 
-    public function getIssueLabels($issueNumber, Repository $repository): array
+    /**
+     * @return array|string[]
+     */
+    public function getIssueLabels(int $issueNumber, Repository $repository): array
     {
         $key = $this->getCacheKey($issueNumber, $repository);
         if (!isset($this->labelCache[$key])) {
@@ -54,12 +57,12 @@ class GithubLabelApi implements LabelApi
         return $labels;
     }
 
-    public function addIssueLabel($issueNumber, string $label, Repository $repository)
+    public function addIssueLabel(int $issueNumber, string $label, Repository $repository): void
     {
         $this->addIssueLabels($issueNumber, [$label], $repository);
     }
 
-    public function removeIssueLabel($issueNumber, string $label, Repository $repository)
+    public function removeIssueLabel(int $issueNumber, string $label, Repository $repository): void
     {
         $key = $this->getCacheKey($issueNumber, $repository);
         if (isset($this->labelCache[$key]) && !isset($this->labelCache[$key][$label])) {
@@ -81,7 +84,7 @@ class GithubLabelApi implements LabelApi
         }
     }
 
-    public function addIssueLabels($issueNumber, array $labels, Repository $repository)
+    public function addIssueLabels(int $issueNumber, array $labels, Repository $repository): void
     {
         $key = $this->getCacheKey($issueNumber, $repository);
         $labelsToAdd = [];
@@ -135,6 +138,9 @@ class GithubLabelApi implements LabelApi
         });
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getAllLabels(Repository $repository): array
     {
         $key = 'labels_'.sha1($repository->getFullName());
@@ -147,7 +153,7 @@ class GithubLabelApi implements LabelApi
         });
     }
 
-    private function getCacheKey($issueNumber, Repository $repository)
+    private function getCacheKey(int $issueNumber, Repository $repository): string
     {
         return sprintf('%s_%s_%s', $issueNumber, $repository->getVendor(), $repository->getName());
     }

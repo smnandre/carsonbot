@@ -28,7 +28,9 @@ class StatusChangeByCommentSubscriber extends AbstractStatusChangeSubscriber
         $issueNumber = $data['issue']['number'];
         $newStatus = $this->parseStatusFromText($data['comment']['body']);
 
-        if (Status::REVIEWED === $newStatus && false === $this->isUserAllowedToReview($data)) {
+        $isUserAllowedToReview = ($data['issue']['user']['login'] !== $data['comment']['user']['login']);
+
+        if (Status::REVIEWED === $newStatus && !$isUserAllowedToReview) {
             $newStatus = null;
         }
 
@@ -55,6 +57,9 @@ class StatusChangeByCommentSubscriber extends AbstractStatusChangeSubscriber
         ];
     }
 
+    /**
+     * @return bool
+     */
     private function isUserAllowedToReview(array $data): bool
     {
         return $data['issue']['user']['login'] !== $data['comment']['user']['login'];

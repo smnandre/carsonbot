@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Api\Label\LabelApi;
 use App\Model\Repository;
+use Generator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -13,16 +14,11 @@ use Psr\Log\LoggerInterface;
  */
 class LabelNameExtractor
 {
-    private static array $labelAliases = [
+    private const array LABEL_ALIASES = [
         'bridge\doctrine' => 'DoctrineBridge',
-        'bridge/doctrine' => 'DoctrineBridge',
         'bridge\monolog' => 'MonologBridge',
-        'bridge/monolog' => 'MonologBridge',
-        'bridge\phpunit' => 'PhpUnitBridge',
         'bridge/phpunit' => 'PhpUnitBridge',
-        'bridge\proxymanager' => 'ProxyManagerBridge',
         'bridge/proxymanager' => 'ProxyManagerBridge',
-        'bridge\twig' => 'TwigBridge',
         'bridge/twig' => 'TwigBridge',
         'di' => 'DependencyInjection',
         'fwb' => 'FrameworkBundle',
@@ -41,6 +37,8 @@ class LabelNameExtractor
     /**
      * Get labels from title string.
      * Example title: "[PropertyAccess] [RFC] [WIP] Allow custom methods on property accesses".
+     *
+     * @return string[]
      */
     public function extractLabels(string $title, Repository $repository): array
     {
@@ -57,14 +55,19 @@ class LabelNameExtractor
             }
         }
 
-        $this->logger->debug('Searched for labels in title', ['title' => $title, 'labels' => json_encode($labels)]);
+        $this->logger->debug('Searched for labels in title', ['title' => $title, 'labels' => \json_encode($labels, \JSON_THROW_ON_ERROR)]);
 
         return $labels;
     }
 
-    public function getAliasesForLabel($label)
+    /**
+     * Get all labels for a given label.
+     *
+     * @return Generator<string>
+     */
+    public function getAliasesForLabel(string $label): Generator
     {
-        foreach (self::$labelAliases as $alias => $name) {
+        foreach (self::LABEL_ALIASES as $alias => $name) {
             if ($name === $label) {
                 yield $alias;
             }
@@ -79,9 +82,8 @@ class LabelNameExtractor
     private function getLabels(Repository $repository): array
     {
         $allLabels = $this->labelsApi->getAllLabelsForRepository($repository);
-        $closure = fn ($s) => strtolower($s);
 
-        return array_combine(array_map($closure, $allLabels), $allLabels);
+        return array_combine(array_map('strtolower', $allLabels), $allLabels);
     }
 
     /**
@@ -90,8 +92,6 @@ class LabelNameExtractor
      */
     private function fixLabelName(string $label): string
     {
-        $labelAliases = self::$labelAliases;
-
-        return $labelAliases[strtolower($label)] ?? $label;
+        return self::LABEL_ALIASES[strtr('ABCDEFGHIJKLMNOPQRSTUVWXYZ\\', 'abcdefghijklmnopqrstuvwxyz/', $label)] ?? $label;
     }
 }

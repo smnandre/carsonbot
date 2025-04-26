@@ -69,7 +69,7 @@ class GitHubStatusApi implements StatusApi
         }
     }
 
-    public function getIssueStatus($issueNumber, Repository $repository): ?string
+    public function getIssueStatus(int $issueNumber, Repository $repository): ?string
     {
         $currentLabels = $this->labelsApi->getIssueLabels($issueNumber, $repository);
 
