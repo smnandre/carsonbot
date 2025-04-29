@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Api\Label\LabelApi;
 use App\Model\Repository;
-use Generator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -63,9 +62,9 @@ class LabelNameExtractor
     /**
      * Get all labels for a given label.
      *
-     * @return Generator<string>
+     * @return \Generator<string>
      */
-    public function getAliasesForLabel(string $label): Generator
+    public function getAliasesForLabel(string $label): \Generator
     {
         foreach (self::LABEL_ALIASES as $alias => $name) {
             if ($name === $label) {

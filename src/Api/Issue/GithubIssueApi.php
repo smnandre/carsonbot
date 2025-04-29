@@ -3,8 +3,6 @@
 namespace App\Api\Issue;
 
 use App\Model\Repository;
-use App\Service\TaskHandler\CloseDraftHandler;
-use App\Service\TaskHandler\CloseStaleIssuesHandler;
 use Github\Api\Issue;
 use Github\Api\Issue\Comments;
 use Github\Api\Search;

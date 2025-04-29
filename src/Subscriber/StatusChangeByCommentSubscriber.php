@@ -57,9 +57,6 @@ class StatusChangeByCommentSubscriber extends AbstractStatusChangeSubscriber
         ];
     }
 
-    /**
-     * @return bool
-     */
     private function isUserAllowedToReview(array $data): bool
     {
         return $data['issue']['user']['login'] !== $data['comment']['user']['login'];
