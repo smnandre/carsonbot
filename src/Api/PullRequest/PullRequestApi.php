@@ -14,6 +14,9 @@ use App\Model\Repository;
  */
 interface PullRequestApi
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function show(Repository $repository, int $number): array;
 
     public function updateTitle(Repository $repository, int $number, string $title, ?string $body = null): void;

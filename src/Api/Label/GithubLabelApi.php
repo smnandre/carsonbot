@@ -124,7 +124,7 @@ class GithubLabelApi implements LabelApi
     {
         $key = 'component_labels_'.sha1($repository->getFullName());
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($repository) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($repository): array {
             $labels = $this->getAllLabels($repository);
             $item->expiresAfter(86400);
             $componentLabels = [];
@@ -139,13 +139,13 @@ class GithubLabelApi implements LabelApi
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, array{name: string, color: string}>
      */
     private function getAllLabels(Repository $repository): array
     {
         $key = 'labels_'.sha1($repository->getFullName());
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($repository) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($repository): array {
             $labels = $this->resultPager->fetchAll($this->labelsApi, 'all', [$repository->getVendor(), $repository->getName()]);
             $item->expiresAfter(604800);
 

@@ -91,6 +91,6 @@ class LabelNameExtractor
      */
     private function fixLabelName(string $label): string
     {
-        return self::LABEL_ALIASES[strtr('ABCDEFGHIJKLMNOPQRSTUVWXYZ\\', 'abcdefghijklmnopqrstuvwxyz/', $label)] ?? $label;
+        return self::LABEL_ALIASES[strtr($label, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\\', 'abcdefghijklmnopqrstuvwxyz/')] ?? $label;
     }
 }

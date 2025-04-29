@@ -53,12 +53,12 @@ class GitHubRequestHandler
             }
 
             $content = $request->getContent();
-            if (!is_string($content)) {
+            if (!$content) {
                 throw new BadRequestHttpException('Empty request body!');
             }
 
             $signature = $request->headers->get('X-Hub-Signature');
-            if (!is_string($signature)) {
+            if (!$signature) {
                 throw new BadRequestHttpException('Invalid signature!');
             }
 

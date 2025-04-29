@@ -56,9 +56,4 @@ class StatusChangeByCommentSubscriber extends AbstractStatusChangeSubscriber
             GitHubEvents::ISSUE_COMMENT => 'onIssueComment',
         ];
     }
-
-    private function isUserAllowedToReview(array $data): bool
-    {
-        return $data['issue']['user']['login'] !== $data['comment']['user']['login'];
-    }
 }

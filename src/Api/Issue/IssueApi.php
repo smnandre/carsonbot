@@ -19,12 +19,18 @@ interface IssueApi
      */
     public function open(Repository $repository, string $title, string $body, array $labels): void;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function show(Repository $repository, int $issueNumber): array;
 
     public function commentOnIssue(Repository $repository, int $issueNumber, string $commentBody): void;
 
     public function lastCommentWasMadeByBot(Repository $repository, int $number): bool;
 
+    /**
+     * @return iterable<array<string, mixed>>
+     */
     public function findStaleIssues(Repository $repository, \DateTimeImmutable $noUpdateAfter): iterable;
 
     /**
